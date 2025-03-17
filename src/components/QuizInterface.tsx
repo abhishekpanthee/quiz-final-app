@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Timer } from "@/components/Timer";
 import { QuestionGrid } from "@/components/QuestionGrid";
 import { TeamSelector } from "@/components/TeamSelector";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, Check, ArrowRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { Round } from "../App";
 import { quizData } from "@/data/questions";
@@ -108,6 +108,8 @@ export function QuizInterface({ round, onBack }: QuizInterfaceProps) {
           questions: set.questions,
           timeLimit: 3
         }));
+      case "riddle":
+        return quizData.riddle_round;
       case "wager":
       case "buzzer":
         return quizData.wager_round;
@@ -169,6 +171,15 @@ export function QuizInterface({ round, onBack }: QuizInterfaceProps) {
 
     if (round.id === "rapid-fire") {
       return 45;
+    }
+
+    if (round.id === "riddle") {
+      switch (currentPassIndex) {
+        case 0: return 40;
+        case 1: return 20;
+        case 2: return 12;
+        default: return 7;
+      }
     }
 
     switch (currentPassIndex) {
@@ -242,6 +253,35 @@ export function QuizInterface({ round, onBack }: QuizInterfaceProps) {
       return;
     }
 
+    if (currentPassIndex < passingOrder.length - 1) {
+      setCurrentPassIndex(prev => prev + 1);
+      setShowAnswer(false);
+
+      const nextTeam = passingOrder[currentPassIndex + 1];
+      toast({
+        title: "Question Passed",
+        description: `Question passed to ${nextTeam.name}`,
+        duration: 2000,
+      });
+    } else {
+      setAllTeamsAttempted(true);
+      setShowAnswer(true);
+
+      toast({
+        title: "Question Complete",
+        description: "All teams have attempted. Question completed.",
+        duration: 2000,
+      });
+
+      setTimeout(() => {
+        setAnsweredQuestions(prev => [...prev, selectedQuestion!]);
+        resetQuestionState();
+      }, 7000);
+    }
+  };
+
+  // New function to manually pass the question to the next team
+  const handleManualPass = () => {
     if (currentPassIndex < passingOrder.length - 1) {
       setCurrentPassIndex(prev => prev + 1);
       setShowAnswer(false);
@@ -399,6 +439,17 @@ export function QuizInterface({ round, onBack }: QuizInterfaceProps) {
           {question.question}
         </h2>
 
+        {showAnswer && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-8 p-4 bg-muted rounded-lg"
+          >
+            <h3 className="font-semibold">Answer:</h3>
+            <p>{question.answer}</p>
+          </motion.div>
+        )}
+
         {(isWagerQuestion(question) || round.id === "buzzer") && !showAnswer && (
           <div className="grid grid-cols-2 gap-4 mt-4">
             {isWagerQuestion(question) && question.options.map((option: string, index: number) => (
@@ -407,8 +458,7 @@ export function QuizInterface({ round, onBack }: QuizInterfaceProps) {
                 onClick={() => handleOptionSelect(option)}
                 className="w-full py-4"
                 variant="outline"
-              >
-                {option}
+              >{option}
               </Button>
             ))}
           </div>
@@ -501,8 +551,7 @@ export function QuizInterface({ round, onBack }: QuizInterfaceProps) {
                   />
                 )}
 
-
-{round.id === "rapid-fire" && rapidFireSetActive && (
+                {round.id === "rapid-fire" && rapidFireSetActive && (
                   <Timer
                     key={`rapid-fire-question-${currentRapidFireQuestion}`}
                     duration={7}
@@ -518,14 +567,26 @@ export function QuizInterface({ round, onBack }: QuizInterfaceProps) {
 
               <div className="flex flex-col gap-4">
                 {!showAnswer && !allTeamsAttempted && round.id !== "wager" && round.id !== "buzzer" && (
-                  <Button
-                    onClick={handleCorrectAnswer}
-                    className="w-full"
-                    variant="default"
-                  >
-                    <Check className="mr-2 h-4 w-4" />
-                    Correct
-                  </Button>
+                  <>
+                    <Button
+                      onClick={handleCorrectAnswer}
+                      className="w-full"
+                      variant="default"
+                    >
+                      <Check className="mr-2 h-4 w-4" />
+                      Correct
+                    </Button>
+                    
+                    {/* New Pass button */}
+                    <Button
+                      onClick={handleManualPass}
+                      className="w-full"
+                      variant="outline"
+                    >
+                      <ArrowRight className="mr-2 h-4 w-4" />
+                      Pass
+                    </Button>
+                  </>
                 )}
                 {round.id === "rapid-fire" && rapidFireSetActive && (
                   <Button

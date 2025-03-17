@@ -42,6 +42,11 @@ const rounds: Round[] = [
     name: 'Buzzer',
     instructions: 'Quick succession of questions with shorter time limits. Rapid responses required.',
   },
+  {
+    id: 'riddle',
+    name: 'Riddle Round',
+    instructions: 'Solve the riddle',
+  },
 ];
 
 function App() {

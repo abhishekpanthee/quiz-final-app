@@ -327,6 +327,56 @@ export const quizData = {
       "points": 100
     },
   ],
+  "riddle_round": [
+    {
+      id: 1,
+      question: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?",
+      answer: "An echo",
+      points: 10
+    },
+    {
+      id: 2,
+      question: "The more you take, the more you leave behind. What am I?",
+      answer: "Footsteps",
+      points: 10
+    },
+    {
+      id: 3,
+      question: "What has keys but no locks, space but no room, and you can enter but not go in?",
+      answer: "A keyboard",
+      points: 15
+    },
+    {
+      id: 4,
+      question: "I'm tall when I'm young, and short when I'm old. What am I?",
+      answer: "A candle",
+      points: 10
+    },
+    {
+      id: 5,
+      question: "What goes up but never comes down?",
+      answer: "Your age",
+      points: 5
+    },
+    {
+      id: 6,
+      question: "What has a head, a tail, is brown, and has no legs?",
+      answer: "A penny",
+      points: 15
+    },
+    {
+      id: 7,
+      question: "What has 13 hearts but no other organs?",
+      answer: "A deck of playing cards",
+      points: 15
+    },
+    {
+      id: 8,
+      question: "What can travel around the world while staying in a corner?",
+      answer: "A stamp",
+      points: 10
+    }
+  ],
   "rapid_fire_round": [
     {
       "setId": 1,

@@ -3,15 +3,17 @@ import { Trophy, Brain, Eye, Scale, Zap, Siren } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Round } from '../App';
 
+import RiddleIcon from '../../public/assets/riddle1.png'; // Import the custom image
+
 const roundIcons = {
   elimination: Trophy,
   general: Brain,
   visual: Eye,
   wager: Scale,
-'rapid-fire': Zap,
-  buzzer: Siren,  
+  'rapid-fire': Zap,
+  buzzer: Siren,
+  'riddle': () => <img src={RiddleIcon} alt="Riddle Icon" className="w-16 h-16" />,
 };
-
 interface RoundSelectionProps {
   rounds: Round[];
   onSelectRound: (round: Round) => void;
